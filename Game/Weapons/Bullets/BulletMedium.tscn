@@ -1,0 +1,78 @@
+[gd_scene load_steps=11 format=3 uid="uid://c55x0sodt210i"]
+
+[ext_resource type="Script" path="res://Game/Weapons/Bullets/BulletMedium.gd" id="1_7kcl3"]
+[ext_resource type="Texture2D" uid="uid://c5fko8wxafsp8" path="res://Art/Textures/bullet_01.png" id="2_bceqd"]
+[ext_resource type="Script" path="res://Game/Weapons/Bullets/DespawnTimer.gd" id="3_fn8tg"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_af0kp"]
+atlas = ExtResource("2_bceqd")
+region = Rect2(0, 0, 30, 40)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ru6md"]
+atlas = ExtResource("2_bceqd")
+region = Rect2(30, 0, 30, 40)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kcaoi"]
+atlas = ExtResource("2_bceqd")
+region = Rect2(60, 0, 30, 40)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_thlla"]
+atlas = ExtResource("2_bceqd")
+region = Rect2(60, 0, 30, 40)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sahbx"]
+atlas = ExtResource("2_bceqd")
+region = Rect2(30, 0, 30, 40)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_xxibk"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_af0kp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ru6md")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kcaoi")
+}],
+"loop": true,
+"name": &"_fire",
+"speed": 20.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_thlla")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sahbx")
+}],
+"loop": true,
+"name": &"_travel",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_kah61"]
+radius = 3.0
+height = 6.0
+
+[node name="BulletMedium" type="Area2D"]
+script = ExtResource("1_7kcl3")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(-1, -3.55271e-15)
+rotation = -1.5708
+scale = Vector2(0.2, 0.2)
+sprite_frames = SubResource("SpriteFrames_xxibk")
+animation = &"_fire"
+frame_progress = 0.332484
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_kah61")
+
+[node name="DespawnTimer" type="Timer" parent="."]
+wait_time = 0.3
+script = ExtResource("3_fn8tg")
+
+[connection signal="timeout" from="DespawnTimer" to="DespawnTimer" method="_on_timeout"]

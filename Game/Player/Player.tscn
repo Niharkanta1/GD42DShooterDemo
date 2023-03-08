@@ -1,9 +1,10 @@
-[gd_scene load_steps=10 format=3 uid="uid://hw4ukkr8pcdu"]
+[gd_scene load_steps=11 format=3 uid="uid://hw4ukkr8pcdu"]
 
 [ext_resource type="Texture2D" uid="uid://dylhffsh3bxgp" path="res://Art/Textures/_sprites_heroes.png" id="1_7xjkp"]
 [ext_resource type="Script" path="res://Game/Player/Player.gd" id="1_dfrrc"]
 [ext_resource type="Texture2D" uid="uid://cqjbms78rb28n" path="res://Art/Textures/assault_rifle.png" id="3_ltofw"]
 [ext_resource type="Script" path="res://Game/Player/GunPosition.gd" id="3_wetb0"]
+[ext_resource type="Script" path="res://Game/Player/Gun.gd" id="4_hjkvp"]
 
 [sub_resource type="Animation" id="Animation_74vsw"]
 length = 0.001
@@ -88,17 +89,16 @@ shape = SubResource("RectangleShape2D_2e0me")
 
 [node name="GunPosition" type="Marker2D" parent="."]
 position = Vector2(0, 2)
-rotation = -0.644027
 script = ExtResource("3_wetb0")
 
 [node name="Gun" type="Node2D" parent="GunPosition"]
+position = Vector2(8, 1)
+script = ExtResource("4_hjkvp")
+
+[node name="ShootPosition" type="Marker2D" parent="GunPosition/Gun"]
+position = Vector2(14, -1)
+scale = Vector2(0.6, 0.6)
 
 [node name="Sprite2D" type="Sprite2D" parent="GunPosition/Gun"]
-position = Vector2(8.72767, 1.95646)
 scale = Vector2(0.6, 0.6)
 texture = ExtResource("3_ltofw")
-
-[node name="ShootPosition" type="Marker2D" parent="GunPosition/Gun/Sprite2D"]
-position = Vector2(15.7615, -2.07894)
-
-[connection signal="look_direction_changed" from="." to="GunPosition" method="_on_player_look_direction_changed"]

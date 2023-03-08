@@ -5,6 +5,7 @@ class_name  Player
 @onready var sprite : Sprite2D = $Body/Sprite2D;
 @onready var animation_player : AnimationPlayer = $Body/AnimationPlayer;
 @onready var gun_position : Marker2D = $GunPosition
+@onready var gun: Gun = $GunPosition/Gun
 
 @export var move_speed: float = 100;
 
@@ -41,9 +42,8 @@ func _ready():
 	state = states.IDLE;
 
 
-func _physics_process(delta):
-	UpdateLookDirection();
-	UpdateGunPosition();
+func _physics_process(_delta):
+	update_look_direction();
 	match state:
 		states.IDLE:
 			if Input.is_action_pressed("left") or Input.is_action_pressed("right") or \
@@ -63,6 +63,7 @@ func _physics_process(delta):
 			velocity = Vector2(input_direction_x, input_direction_y);
 			velocity = velocity.normalized() * move_speed;
 			move_and_slide()
+			check_back_ward_movement(input_direction_x);
 
 			# Other State Transitions:
 			if is_equal_approx(input_direction_x, 0.0) and is_equal_approx(input_direction_y, 0.0):
@@ -73,29 +74,35 @@ func _physics_process(delta):
 
 		states.DIE:
 			pass;
-			
-			
-func UpdateLookDirection() -> void:
-	var pointer = get_global_mouse_position();
-	var pointer_direction = position.x - pointer.x;
-	if pointer_direction < 0:
+	
+	# need to call at the end so that the shoot position will be sync with latest position of player
+	fire_weapon(); 
+	
+	
+	
+func update_look_direction() -> void:
+	if get_local_mouse_position().x > 0:
 		if not direction == 1: 
 			direction = 1;
 			sprite.flip_h = false;
-			emit_signal("look_direction_changed", direction);
 		
-	elif pointer_direction > 0:
+	elif get_local_mouse_position().x < 0:
 		if not direction == -1: 
 			direction = -1;
 			sprite.flip_h = true;
-			emit_signal("look_direction_changed", direction);
-	
+			
 
-func UpdateGunPosition() -> void:
-	pass;
+func check_back_ward_movement(input_direction: int) -> void:
+	if direction != input_direction:
+		animation_player.speed_scale = -1;
+	else:
+		animation_player.speed_scale = 1;
 
 
-
+func fire_weapon() -> void:
+	if(Input.is_action_just_pressed("fire")):
+		gun.shootBullet();
+		
 
 
 
